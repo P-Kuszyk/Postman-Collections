@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "8e325e16-2e6a-4881-85aa-395ebc90ffb1",
+		"name": "Inzynierka",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39476935"
+	},
+	"item": [
+		{
+			"name": "[GET] Words",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const urlBody = pm.response.json();\r",
+							"\r",
+							"// ILOŚĆ SŁOW JEST WIĘKSZA NIŻ 10\r",
+							"pm.test(\"Gotowość pierwszej lekcji\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(urlBody.length).to.be.above(10);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrlInz}}api/words",
+					"host": [
+						"{{baseUrlInz}}api"
+					],
+					"path": [
+						"words"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[GET] Random Words",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const urlBody = pm.response.json();\r",
+							"\r",
+							"// SPRAWDŹ CZY ILOŚĆ WYLOSOWANYCH SŁOW JEST RÓWNA 10\r",
+							"pm.test(\"Przygotowanie do pierwszej lekcji\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(urlBody.length).to.be.eql(10);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrlInz}}api/random-words",
+					"host": [
+						"{{baseUrlInz}}api"
+					],
+					"path": [
+						"random-words"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Translate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const checkWordAnswer = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Sprawdzenie tłumaczenia\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"    checkWordAnswer.forEach(function(x) { // x OZNACZA 1 ITEM W TABLICY\r",
+							"        pm.expect(x.correct).to.be.true;\r",
+							"    });\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"translations\": [\r\n    { \"word\": \"color\", \"translation\": \"kolor\" },\r\n    { \"word\": \"game\", \"translation\": \"gra\" },\r\n    { \"word\": \"grass\", \"translation\": \"trawa\" }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrlInz}}api/check-word?Content-Type=application/json",
+					"host": [
+						"{{baseUrlInz}}api"
+					],
+					"path": [
+						"check-word"
+					],
+					"query": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const urlBody = pm.response.json();\r",
+					"\r",
+					"pm.test(\"Połączenie z bazą danych\", function() {\r",
+					"    pm.response.to.have.status(200);\r",
+					"})\r",
+					""
+				]
+			}
+		}
+	]
+}
